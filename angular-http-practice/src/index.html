@@ -1,0 +1,17 @@
+@if (loading()) {
+  <div>Loading...</div>
+}
+@if (error()) {
+  <div>Error: {{ error() }}</div>
+}
+@if (!loading() && !error() && data().length === 0) {
+  <div>No data available.</div>
+}
+@if (!loading() && !error()) {
+  <h2>Data List</h2>
+  <ul>
+    @for (item of data(); track item.title) {
+      <li>{{ item.title }}</li>
+    }
+  </ul>
+}
