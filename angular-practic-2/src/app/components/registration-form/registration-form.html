@@ -1,0 +1,148 @@
+<div class="form-container">
+  <h2>Реєстрація користувача</h2>
+
+  <!-- Форма реєстрації -->
+  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" *ngIf="!submittedData">
+    
+    <!-- Ім'я -->
+    <div class="form-group">
+      <label for="firstName">Ім'я *</label>
+      <input 
+        type="text" 
+        id="firstName" 
+        formControlName="firstName"
+        [class.invalid]="isFieldInvalid('firstName')"
+        placeholder="Введіть ваше ім'я"
+      />
+      <div class="error-messages" *ngIf="isFieldInvalid('firstName')">
+        <small *ngFor="let error of getFieldErrors('firstName')" class="error">
+          {{ error }}
+        </small>
+      </div>
+    </div>
+
+    <!-- Прізвище -->
+    <div class="form-group">
+      <label for="lastName">Прізвище *</label>
+      <input 
+        type="text" 
+        id="lastName" 
+        formControlName="lastName"
+        [class.invalid]="isFieldInvalid('lastName')"
+        placeholder="Введіть ваше прізвище"
+      />
+      <div class="error-messages" *ngIf="isFieldInvalid('lastName')">
+        <small *ngFor="let error of getFieldErrors('lastName')" class="error">
+          {{ error }}
+        </small>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label for="email">Email *</label>
+      <input 
+        type="email" 
+        id="email" 
+        formControlName="email"
+        [class.invalid]="isFieldInvalid('email')"
+        placeholder="example@mail.com"
+      />
+      <div class="error-messages" *ngIf="isFieldInvalid('email')">
+        <small *ngFor="let error of getFieldErrors('email')" class="error">
+          {{ error }}
+        </small>
+      </div>
+    </div>
+
+    <!-- Пароль -->
+    <div class="form-group">
+      <label for="password">Пароль *</label>
+      <input 
+        type="password" 
+        id="password" 
+        formControlName="password"
+        [class.invalid]="isFieldInvalid('password')"
+        placeholder="Мінімум 8 символів"
+      />
+      <div class="error-messages" *ngIf="isFieldInvalid('password')">
+        <small *ngFor="let error of getFieldErrors('password')" class="error">
+          {{ error }}
+        </small>
+      </div>
+    </div>
+
+    <!-- Підтвердження пароля -->
+    <div class="form-group">
+      <label for="confirmPassword">Підтвердіть пароль *</label>
+      <input 
+        type="password" 
+        id="confirmPassword" 
+        formControlName="confirmPassword"
+        [class.invalid]="isFieldInvalid('confirmPassword') || passwordMatchError"
+        placeholder="Повторіть пароль"
+      />
+      <div class="error-messages" *ngIf="isFieldInvalid('confirmPassword')">
+        <small *ngFor="let error of getFieldErrors('confirmPassword')" class="error">
+          {{ error }}
+        </small>
+      </div>
+      <div class="error-messages" *ngIf="passwordMatchError">
+        <small class="error">Паролі не співпадають</small>
+      </div>
+    </div>
+
+    <!-- Дата народження -->
+    <div class="form-group">
+      <label for="birthDate">Дата народження *</label>
+      <input 
+        type="date" 
+        id="birthDate" 
+        formControlName="birthDate"
+        [class.invalid]="isFieldInvalid('birthDate')"
+      />
+      <div class="error-messages" *ngIf="isFieldInvalid('birthDate')">
+        <small *ngFor="let error of getFieldErrors('birthDate')" class="error">
+          {{ error }}
+        </small>
+      </div>
+    </div>
+
+    <!-- Кнопки -->
+    <div class="form-actions">
+      <button 
+        type="submit" 
+        class="btn-submit"
+        [disabled]="registrationForm.invalid"
+      >
+        Зареєструватися
+      </button>
+      <button 
+        type="button" 
+        class="btn-reset"
+        (click)="resetForm()"
+      >
+        Скинути
+      </button>
+    </div>
+
+    <!-- Індикатор стану форми -->
+    <div class="form-status">
+      <small [class.valid]="registrationForm.valid" [class.invalid]="registrationForm.invalid">
+        Статус форми: {{ registrationForm.valid ? 'Валідна ✓' : 'Невалідна ✗' }}
+      </small>
+    </div>
+  </form>
+
+  <!-- Відображення результату після submit -->
+  <div class="success-message" *ngIf="submittedData">
+    <h3>✓ Реєстрація успішна!</h3>
+    <div class="data-summary">
+      <h4>Ваші дані:</h4>
+      <pre>{{ submittedData | json }}</pre>
+    </div>
+    <button class="btn-new" (click)="resetForm()">
+      Нова реєстрація
+    </button>
+  </div>
+</div>
