@@ -1,0 +1,100 @@
+<div class="details-container">
+  <!-- Індикатор завантаження -->
+  <div *ngIf="loading" class="loading">
+    <p>Завантаження...</p>
+  </div>
+
+  <!-- Деталі книги -->
+  <div *ngIf="!loading && book" class="book-details">
+    <!-- Кнопка повернення -->
+    <button (click)="goBack()" class="back-btn">
+      ← Повернутися до списку
+    </button>
+
+    <!-- Заголовок з використанням custom pipe -->
+    <h1>{{ book.title | titleCase }}</h1>
+
+    <!-- Інформаційні картки -->
+    <div class="info-grid">
+      
+      <!-- Автор -->
+      <div class="info-card">
+        <div class="info-label">👤 Автор</div>
+        <div class="info-value">{{ book.author }}</div>
+      </div>
+
+      <!-- Ціна з використанням ngClass та currency pipe -->
+      <div class="info-card" [ngClass]="getPriceClass()">
+        <div class="info-label">💰 Ціна</div>
+        <div class="info-value">
+          {{ book.price | currency:'UAH':'symbol':'1.0-0' }}
+        </div>
+        <div class="price-status">{{ getPriceStatus() }}</div>
+      </div>
+
+      <!-- Дата публікації з використанням date pipe -->
+      <div class="info-card">
+        <div class="info-label">📅 Дата публікації</div>
+        <div class="info-value">{{ book.publishedDate | date:'dd MMMM yyyy':'':'uk' }}</div>
+        <div class="additional-info">{{ book.publishedDate | date:'EEEE':'':'uk' }}</div>
+      </div>
+
+      <!-- ID книги -->
+      <div class="info-card">
+        <div class="info-label">🔢 ID книги</div>
+        <div class="info-value">#{{ book.id }}</div>
+      </div>
+    </div>
+
+    <!-- Опис книги -->
+    <div *ngIf="book.description" class="description-section">
+      <h3>📖 Опис</h3>
+      <p>{{ book.description }}</p>
+    </div>
+
+    <!-- Додаткова інформація з використанням ngStyle -->
+    <div class="additional-section">
+      <h3>📊 Додаткова інформація</h3>
+      <div class="stats-grid">
+        <div 
+          class="stat-item"
+          [ngStyle]="{
+            'background-color': book.price > 500 ? '#fff3cd' : '#d4edda',
+            'border-left': book.price > 500 ? '4px solid #ffc107' : '4px solid #28a745'
+          }"
+        >
+          <strong>Ціновий діапазон:</strong>
+          <span *ngIf="book.price > 500">Преміум</span>
+          <span *ngIf="book.price <= 500">Стандарт</span>
+        </div>
+
+        <div class="stat-item">
+          <strong>Довжина назви:</strong>
+          {{ book.title.length }} символів
+        </div>
+
+        <div class="stat-item">
+          <strong>Назва UPPERCASE:</strong>
+          {{ book.title | uppercase }}
+        </div>
+
+        <div class="stat-item">
+          <strong>Назва lowercase:</strong>
+          {{ book.title | lowercase }}
+        </div>
+      </div>
+    </div>
+
+    <!-- JSON дамп (для демонстрації json pipe) -->
+    <div class="json-section">
+      <h3>🔍 Дані у форматі JSON</h3>
+      <pre>{{ book | json }}</pre>
+    </div>
+  </div>
+
+  <!-- Повідомлення про відсутність книги -->
+  <div *ngIf="!loading && !book" class="not-found">
+    <h2>😔 Книгу не знайдено</h2>
+    <a routerLink="/list" class="home-link">Повернутися до списку</a>
+  </div>
+</div>

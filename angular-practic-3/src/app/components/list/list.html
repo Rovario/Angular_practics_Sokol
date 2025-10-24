@@ -1,0 +1,114 @@
+<div class="list-container">
+  <h2>📚 Список книг</h2>
+
+  <!-- Панель пошуку та сортування -->
+  <div class="controls">
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="searchText"
+        placeholder="Пошук за назвою або автором..."
+        class="search-input"
+      />
+      <button 
+        *ngIf="searchText" 
+        (click)="clearSearch()"
+        class="clear-btn"
+      >
+        ✕
+      </button>
+    </div>
+
+    <div class="sort-controls">
+      <button 
+        (click)="toggleSort('title')"
+        [class.active]="sortBy === 'title'"
+        class="sort-btn"
+      >
+        Назва {{ sortBy === 'title' ? (sortAscending ? '↑' : '↓') : '' }}
+      </button>
+      <button 
+        (click)="toggleSort('price')"
+        [class.active]="sortBy === 'price'"
+        class="sort-btn"
+      >
+        Ціна {{ sortBy === 'price' ? (sortAscending ? '↑' : '↓') : '' }}
+      </button>
+      <button 
+        (click)="toggleSort('date')"
+        [class.active]="sortBy === 'date'"
+        class="sort-btn"
+      >
+        Дата {{ sortBy === 'date' ? (sortAscending ? '↑' : '↓') : '' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Повідомлення про відсутність результатів -->
+  <div *ngIf="filteredBooks.length === 0" class="no-results">
+    <p *ngIf="searchText">
+      😔 Книг за запитом "{{ searchText }}" не знайдено
+    </p>
+    <p *ngIf="!searchText">
+      📭 Список книг пустий
+    </p>
+  </div>
+
+  <!-- Список книг -->
+  <div class="books-grid" *ngIf="filteredBooks.length > 0">
+    <!-- Використовуємо *ngFor, custom directive та pipes -->
+    <div 
+      *ngFor="let book of filteredBooks; let i = index; let isFirst = first; let isLast = last"
+      class="book-card"
+      [appHighlight]="book.price"
+      [priceThreshold]="500"
+    >
+      <!-- Badge для першої та останньої книги -->
+      <span *ngIf="isFirst" class="badge badge-first">Перша</span>
+      <span *ngIf="isLast" class="badge badge-last">Остання</span>
+
+      <!-- Номер книги -->
+      <div class="book-number">{{ i + 1 }}</div>
+
+      <!-- Назва книги з custom pipe TitleCase -->
+      <h3>{{ book.title | titleCase }}</h3>
+
+      <!-- Автор -->
+      <p class="author">
+        <strong>Автор:</strong> {{ book.author }}
+      </p>
+
+      <!-- Ціна з вбудованим pipe currency -->
+      <p class="price">
+        <strong>Ціна:</strong> 
+        <span [ngClass]="{'expensive': book.price > 500, 'cheap': book.price <= 500}">
+          {{ book.price | currency:'UAH':'symbol':'1.0-0' }}
+        </span>
+      </p>
+
+      <!-- Дата публікації з вбудованим pipe date -->
+      <p class="date">
+        <strong>Опубліковано:</strong> 
+        {{ book.publishedDate | date:'dd.MM.yyyy' }}
+      </p>
+
+      <!-- Опис (якщо є) -->
+      <p *ngIf="book.description" class="description">
+        {{ book.description }}
+      </p>
+
+      <!-- Кнопка деталей -->
+      <a [routerLink]="['/details', book.id]" class="details-btn">
+        Детальніше →
+      </a>
+    </div>
+  </div>
+
+  <!-- Статистика -->
+  <div class="stats" *ngIf="books.length > 0">
+    <p>
+      Усього книг: <strong>{{ books.length }}</strong> | 
+      Показано: <strong>{{ filteredBooks.length }}</strong>
+    </p>
+  </div>
+</div>
